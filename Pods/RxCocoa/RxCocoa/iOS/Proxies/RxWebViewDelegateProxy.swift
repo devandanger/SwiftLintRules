@@ -7,17 +7,18 @@
 //
 
 #if os(iOS)
-import UIKit
 
-#if !RX_NO_MODULE
+import UIKit
 import RxSwift
-#endif
 
 extension UIWebView: HasDelegate {
     public typealias Delegate = UIWebViewDelegate
 }
 
-open class RxWebViewDelegateProxy: DelegateProxy<UIWebView, UIWebViewDelegate>, DelegateProxyType, UIWebViewDelegate {
+open class RxWebViewDelegateProxy
+    : DelegateProxy<UIWebView, UIWebViewDelegate>
+    , DelegateProxyType 
+    , UIWebViewDelegate {
 
     /// Typed parent object.
     public weak private(set) var webView: UIWebView?

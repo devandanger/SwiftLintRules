@@ -8,10 +8,8 @@
 
 #if os(iOS)
 
-#if !RX_NO_MODULE
-   import RxSwift
-#endif
-   import UIKit
+import RxSwift
+import UIKit
 
 extension UISearchController: HasDelegate {
     public typealias Delegate = UISearchControllerDelegate
@@ -19,7 +17,10 @@ extension UISearchController: HasDelegate {
 
 /// For more information take a look at `DelegateProxyType`.
 @available(iOS 8.0, *)
-open class RxSearchControllerDelegateProxy: DelegateProxy<UISearchController, UISearchControllerDelegate>, DelegateProxyType, UISearchControllerDelegate {
+open class RxSearchControllerDelegateProxy
+    : DelegateProxy<UISearchController, UISearchControllerDelegate>
+    , DelegateProxyType 
+    , UISearchControllerDelegate {
 
     /// Typed parent object.
     public weak private(set) var searchController: UISearchController?
@@ -29,11 +30,11 @@ open class RxSearchControllerDelegateProxy: DelegateProxy<UISearchController, UI
         self.searchController = searchController
         super.init(parentObject: searchController, delegateProxy: RxSearchControllerDelegateProxy.self)
     }
-
+    
     // Register known implementations
     public static func registerKnownImplementations() {
         self.register { RxSearchControllerDelegateProxy(searchController: $0) }
     }
 }
-
+   
 #endif

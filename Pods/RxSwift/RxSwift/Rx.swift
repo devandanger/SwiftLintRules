@@ -7,7 +7,7 @@
 //
 
 #if TRACE_RESOURCES
-    private var resourceCount: AtomicInt = 0
+    fileprivate var resourceCount: AtomicInt = 0
 
     /// Resource utilization information
     public struct Resources {
@@ -37,7 +37,7 @@ func rxAbstractMethod(file: StaticString = #file, line: UInt = #line) -> Swift.N
     rxFatalError("Abstract method", file: file, line: line)
 }
 
-func rxFatalError(_ lastMessage: @autoclosure () -> String, file: StaticString = #file, line: UInt = #line) -> Swift.Never {
+func rxFatalError(_ lastMessage: @autoclosure () -> String, file: StaticString = #file, line: UInt = #line) -> Swift.Never  {
     // The temptation to comment this line is great, but please don't, it's for your own good. The choice is yours.
     fatalError(lastMessage(), file: file, line: line)
 }
@@ -71,7 +71,7 @@ func decrementChecked(_ i: inout Int) throws -> Int {
     final class SynchronizationTracker {
         private let _lock = RecursiveLock()
 
-        public enum SychronizationErrorMessages: String {
+        public enum SynchronizationErrorMessages: String {
             case variable = "Two different threads are trying to assign the same `Variable.value` unsynchronized.\n    This is undefined behavior because the end result (variable value) is nondeterministic and depends on the \n    operating system thread scheduler. This will cause random behavior of your program.\n"
             case `default` = "Two different unsynchronized threads are trying to send some event simultaneously.\n    This is undefined behavior because the ordering of the effects caused by these events is nondeterministic and depends on the \n    operating system thread scheduler. This will result in a random behavior of your program.\n"
         }
@@ -85,15 +85,15 @@ func decrementChecked(_ i: inout Int) throws -> Int {
                 print(message)
             #endif
         }
-
-        func register(synchronizationErrorMessage: SychronizationErrorMessages) {
+        
+        func register(synchronizationErrorMessage: SynchronizationErrorMessages) {
             _lock.lock(); defer { _lock.unlock() }
             let pointer = Unmanaged.passUnretained(Thread.current).toOpaque()
             let count = (_threads[pointer] ?? 0) + 1
 
             if count > 1 {
                 synchronizationError(
-                    "⚠️ Reentrancy anomaly was detected. ⚠️\n" +
+                    "⚠️ Reentrancy anomaly was detected.\n" +
                     "  > Debugging: To debug this issue you can set a breakpoint in \(#file):\(#line) and observe the call stack.\n" +
                     "  > Problem: This behavior is breaking the observable sequence grammar. `next (error | completed)?`\n" +
                     "    This behavior breaks the grammar because there is overlapping between sequence events.\n" +
@@ -104,12 +104,12 @@ func decrementChecked(_ i: inout Int) throws -> Int {
                     "    or by enqueing sequence events in some other way.\n"
                 )
             }
-
+            
             _threads[pointer] = count
 
             if _threads.count > 1 {
                 synchronizationError(
-                    "⚠️ Synchronization anomaly was detected. ⚠️\n" +
+                    "⚠️ Synchronization anomaly was detected.\n" +
                     "  > Debugging: To debug this issue you can set a breakpoint in \(#file):\(#line) and observe the call stack.\n" +
                     "  > Problem: This behavior is breaking the observable sequence grammar. `next (error | completed)?`\n" +
                     "    This behavior breaks the grammar because there is overlapping between sequence events.\n" +
@@ -135,5 +135,8 @@ func decrementChecked(_ i: inout Int) throws -> Int {
 
 /// RxSwift global hooks
 public enum Hooks {
+    
+    // Should capture call stack
+    public static var recordCallStackOnError: Bool = false
 
 }

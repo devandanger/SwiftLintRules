@@ -9,12 +9,12 @@
 #if os(iOS) || os(tvOS)
 
 import UIKit
-#if !RX_NO_MODULE
 import RxSwift
-#endif
 
 /// For more information take a look at `DelegateProxyType`.
-open class RxTableViewDelegateProxy: RxScrollViewDelegateProxy, UITableViewDelegate {
+open class RxTableViewDelegateProxy
+    : RxScrollViewDelegateProxy
+    , UITableViewDelegate {
 
     /// Typed parent object.
     public weak private(set) var tableView: UITableView?

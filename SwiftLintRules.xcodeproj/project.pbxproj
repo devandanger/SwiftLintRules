@@ -177,7 +177,7 @@
 				2026B78B20FD87B7001976CD /* Frameworks */,
 				2026B78C20FD87B7001976CD /* Resources */,
 				5A027C22EBAB6B49FA6FA2D3 /* [CP] Embed Pods Frameworks */,
-				2026B7BF20FD886A001976CD /* ShellScript */,
+				2026B7BF20FD886A001976CD /* Swift Lint */,
 			);
 			buildRules = (
 			);
@@ -297,18 +297,19 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		2026B7BF20FD886A001976CD /* ShellScript */ = {
+		2026B7BF20FD886A001976CD /* Swift Lint */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
+			name = "Swift Lint";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${PODS_ROOT}/SwiftLint/swiftlint autocorrect";
+			shellScript = "${PODS_ROOT}/SwiftLint/swiftlint";
 		};
 		5A027C22EBAB6B49FA6FA2D3 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -504,6 +505,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -557,6 +559,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 4.0;
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

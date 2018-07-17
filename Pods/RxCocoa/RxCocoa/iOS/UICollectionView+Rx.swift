@@ -8,9 +8,7 @@
 
 #if os(iOS) || os(tvOS)
 
-#if !RX_NO_MODULE
 import RxSwift
-#endif
 import UIKit
 
 // Items
@@ -49,9 +47,9 @@ extension Reactive where Base: UICollectionView {
             let dataSource = RxCollectionViewReactiveArrayDataSourceSequenceWrapper<S>(cellFactory: cellFactory)
             return self.items(dataSource: dataSource)(source)
         }
-
+        
     }
-
+    
     /**
     Binds sequences of elements to collection view items.
     
@@ -75,7 +73,7 @@ extension Reactive where Base: UICollectionView {
              }
              .disposed(by: disposeBag)
     */
-    public func items<S: Sequence, Cell: UICollectionViewCell, O: ObservableType>
+    public func items<S: Sequence, Cell: UICollectionViewCell, O : ObservableType>
         (cellIdentifier: String, cellType: Cell.Type = Cell.self)
         -> (_ source: O)
         -> (_ configureCell: @escaping (Int, S.Iterator.Element, Cell) -> Void)
@@ -88,12 +86,13 @@ extension Reactive where Base: UICollectionView {
                     configureCell(i, item, cell)
                     return cell
                 }
-
+                    
                 return self.items(dataSource: dataSource)(source)
             }
         }
     }
 
+    
     /**
     Binds sequences of elements to collection view items using a custom reactive data used to perform the transformation.
     
@@ -138,7 +137,8 @@ extension Reactive where Base: UICollectionView {
             O: ObservableType>
         (dataSource: DataSource)
         -> (_ source: O)
-        -> Disposable where DataSource.Element == O.E {
+        -> Disposable where DataSource.Element == O.E
+          {
         return { source in
             // This is called for sideeffects only, and to make sure delegate proxy is in place when
             // data source is being bound.
@@ -168,7 +168,7 @@ extension Reactive where Base: UICollectionView {
     public var dataSource: DelegateProxy<UICollectionView, UICollectionViewDataSource> {
         return RxCollectionViewDataSourceProxy.proxy(for: base)
     }
-
+    
     /// Installs data source as forwarding delegate on `rx.dataSource`.
     /// Data source won't be retained.
     ///
@@ -180,14 +180,14 @@ extension Reactive where Base: UICollectionView {
         -> Disposable {
         return RxCollectionViewDataSourceProxy.installForwardDelegate(dataSource, retainDelegate: false, onProxyForObject: self.base)
     }
-
+   
     /// Reactive wrapper for `delegate` message `collectionView(_:didSelectItemAtIndexPath:)`.
     public var itemSelected: ControlEvent<IndexPath> {
         let source = delegate.methodInvoked(#selector(UICollectionViewDelegate.collectionView(_:didSelectItemAt:)))
             .map { a in
-                return a[1] as! IndexPath
+                return try castOrThrow(IndexPath.self, a[1])
             }
-
+        
         return ControlEvent(events: source)
     }
 
@@ -195,7 +195,7 @@ extension Reactive where Base: UICollectionView {
     public var itemDeselected: ControlEvent<IndexPath> {
         let source = delegate.methodInvoked(#selector(UICollectionViewDelegate.collectionView(_:didDeselectItemAt:)))
             .map { a in
-                return a[1] as! IndexPath
+                return try castOrThrow(IndexPath.self, a[1])
         }
 
         return ControlEvent(events: source)
@@ -207,7 +207,7 @@ extension Reactive where Base: UICollectionView {
             .map { a in
                 return try castOrThrow(IndexPath.self, a[1])
             }
-
+        
         return ControlEvent(events: source)
     }
 
@@ -217,7 +217,7 @@ extension Reactive where Base: UICollectionView {
             .map { a in
                 return try castOrThrow(IndexPath.self, a[1])
             }
-
+        
         return ControlEvent(events: source)
     }
 
@@ -227,7 +227,7 @@ extension Reactive where Base: UICollectionView {
             .map { a in
                 return (try castOrThrow(UICollectionViewCell.self, a[1]), try castOrThrow(IndexPath.self, a[2]))
             }
-
+        
         return ControlEvent(events: source)
     }
 
@@ -264,7 +264,7 @@ extension Reactive where Base: UICollectionView {
 
         return ControlEvent(events: source)
     }
-
+    
     /// Reactive wrapper for `delegate` message `collectionView(_:didSelectItemAtIndexPath:)`.
     ///
     /// It can be only used when one of the `rx.itemsWith*` methods is used to bind observable sequence,
@@ -282,7 +282,7 @@ extension Reactive where Base: UICollectionView {
 
             return Observable.just(try view.rx.model(at: indexPath))
         }
-
+        
         return ControlEvent(events: source)
     }
 
@@ -306,29 +306,71 @@ extension Reactive where Base: UICollectionView {
 
         return ControlEvent(events: source)
     }
-
+    
     /// Synchronous helper method for retrieving a model at indexPath through a reactive data source
     public func model<T>(at indexPath: IndexPath) throws -> T {
         let dataSource: SectionedViewDataSourceType = castOrFatalError(self.dataSource.forwardToDelegate(), message: "This method only works in case one of the `rx.itemsWith*` methods was used.")
-
+        
         let element = try dataSource.model(at: indexPath)
 
-        return element as! T
+        return try castOrThrow(T.self, element)
     }
+}
+
+@available(iOS 10.0, tvOS 10.0, *)
+extension Reactive where Base: UICollectionView {
+
+    /// Reactive wrapper for `prefetchDataSource`.
+    ///
+    /// For more information take a look at `DelegateProxyType` protocol documentation.
+    public var prefetchDataSource: DelegateProxy<UICollectionView, UICollectionViewDataSourcePrefetching> {
+        return RxCollectionViewDataSourcePrefetchingProxy.proxy(for: base)
+    }
+
+    /**
+     Installs prefetch data source as forwarding delegate on `rx.prefetchDataSource`.
+     Prefetch data source won't be retained.
+
+     It enables using normal delegate mechanism with reactive delegate mechanism.
+
+     - parameter prefetchDataSource: Prefetch data source object.
+     - returns: Disposable object that can be used to unbind the data source.
+     */
+    public func setPrefetchDataSource(_ prefetchDataSource: UICollectionViewDataSourcePrefetching)
+        -> Disposable {
+            return RxCollectionViewDataSourcePrefetchingProxy.installForwardDelegate(prefetchDataSource, retainDelegate: false, onProxyForObject: self.base)
+    }
+
+    /// Reactive wrapper for `prefetchDataSource` message `collectionView(_:prefetchItemsAt:)`.
+    public var prefetchItems: ControlEvent<[IndexPath]> {
+        let source = RxCollectionViewDataSourcePrefetchingProxy.proxy(for: base).prefetchItemsPublishSubject
+        return ControlEvent(events: source)
+    }
+
+    /// Reactive wrapper for `prefetchDataSource` message `collectionView(_:cancelPrefetchingForItemsAt:)`.
+    public var cancelPrefetchingForItems: ControlEvent<[IndexPath]> {
+        let source = prefetchDataSource.methodInvoked(#selector(UICollectionViewDataSourcePrefetching.collectionView(_:cancelPrefetchingForItemsAt:)))
+            .map { a in
+                return try castOrThrow(Array<IndexPath>.self, a[1])
+        }
+
+        return ControlEvent(events: source)
+    }
+
 }
 #endif
 
 #if os(tvOS)
 
 extension Reactive where Base: UICollectionView {
-
+    
     /// Reactive wrapper for `delegate` message `collectionView(_:didUpdateFocusInContext:withAnimationCoordinator:)`.
     public var didUpdateFocusInContextWithAnimationCoordinator: ControlEvent<(context: UICollectionViewFocusUpdateContext, animationCoordinator: UIFocusAnimationCoordinator)> {
 
         let source = delegate.methodInvoked(#selector(UICollectionViewDelegate.collectionView(_:didUpdateFocusIn:with:)))
             .map { a -> (context: UICollectionViewFocusUpdateContext, animationCoordinator: UIFocusAnimationCoordinator) in
-                let context = a[1] as! UICollectionViewFocusUpdateContext
-                let animationCoordinator = a[2] as! UIFocusAnimationCoordinator
+                let context = try castOrThrow(UICollectionViewFocusUpdateContext.self, a[1])
+                let animationCoordinator = try castOrThrow(UIFocusAnimationCoordinator.self, a[2])
                 return (context: context, animationCoordinator: animationCoordinator)
             }
 

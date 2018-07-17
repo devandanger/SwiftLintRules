@@ -8,17 +8,18 @@
 
 #if os(iOS) || os(tvOS)
 
-#if !RX_NO_MODULE
 import RxSwift
-#endif
 import UIKit
-
+    
 extension UIScrollView: HasDelegate {
     public typealias Delegate = UIScrollViewDelegate
 }
 
 /// For more information take a look at `DelegateProxyType`.
-open class RxScrollViewDelegateProxy: DelegateProxy<UIScrollView, UIScrollViewDelegate>, DelegateProxyType, UIScrollViewDelegate {
+open class RxScrollViewDelegateProxy
+    : DelegateProxy<UIScrollView, UIScrollViewDelegate>
+    , DelegateProxyType 
+    , UIScrollViewDelegate {
 
     /// Typed parent object.
     public weak private(set) var scrollView: UIScrollView?
@@ -63,7 +64,7 @@ open class RxScrollViewDelegateProxy: DelegateProxy<UIScrollView, UIScrollViewDe
 
         return subject
     }
-
+    
     // MARK: delegate methods
 
     /// For more information take a look at `DelegateProxyType`.
@@ -76,7 +77,7 @@ open class RxScrollViewDelegateProxy: DelegateProxy<UIScrollView, UIScrollViewDe
         }
         self._forwardToDelegate?.scrollViewDidScroll?(scrollView)
     }
-
+    
     deinit {
         if let subject = _contentOffsetBehaviorSubject {
             subject.on(.completed)

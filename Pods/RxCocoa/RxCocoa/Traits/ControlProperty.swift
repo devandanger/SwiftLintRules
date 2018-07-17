@@ -6,12 +6,10 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-#if !RX_NO_MODULE
 import RxSwift
-#endif
 
 /// Protocol that enables extension of `ControlProperty`.
-public protocol ControlPropertyType: ObservableType, ObserverType {
+public protocol ControlPropertyType : ObservableType, ObserverType {
 
     /// - returns: `ControlProperty` interface
     func asControlProperty() -> ControlProperty<E>
@@ -21,7 +19,7 @@ public protocol ControlPropertyType: ObservableType, ObserverType {
     Trait for `Observable`/`ObservableType` that represents property of UI element.
  
     Sequence of values only represents initial control value and user initiated value changes.
-    Programatic value changes won't be reported.
+    Programmatic value changes won't be reported.
 
     It's properties are:
 
@@ -64,19 +62,19 @@ public struct ControlProperty<PropertyType> : ControlPropertyType {
     ///
     /// - parameter observer: Observer to subscribe to property values.
     /// - returns: Disposable object that can be used to unsubscribe the observer from receiving control property values.
-    public func subscribe<O: ObserverType>(_ observer: O) -> Disposable where O.E == E {
+    public func subscribe<O : ObserverType>(_ observer: O) -> Disposable where O.E == E {
         return _values.subscribe(observer)
     }
 
     /// `ControlEvent` of user initiated value changes. Every time user updates control value change event
     /// will be emitted from `changed` event.
     ///
-    /// Programatic changes to control value won't be reported.
+    /// Programmatic changes to control value won't be reported.
     ///
     /// It contains all control property values except for first one.
     ///
     /// The name only implies that sequence element will be generated once user changes a value and not that
-    /// adjacent sequence values need to be different (e.g. because of interaction between programatic and user updates,
+    /// adjacent sequence values need to be different (e.g. because of interaction between programmatic and user updates,
     /// or for any other reason).
     public var changed: ControlEvent<PropertyType> {
         get {

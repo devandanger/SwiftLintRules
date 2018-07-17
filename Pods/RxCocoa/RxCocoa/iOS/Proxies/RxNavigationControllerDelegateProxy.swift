@@ -9,16 +9,17 @@
 #if os(iOS) || os(tvOS)
 
     import UIKit
-    #if !RX_NO_MODULE
-        import RxSwift
-    #endif
+    import RxSwift
 
     extension UINavigationController: HasDelegate {
         public typealias Delegate = UINavigationControllerDelegate
     }
 
     /// For more information take a look at `DelegateProxyType`.
-    open class RxNavigationControllerDelegateProxy: DelegateProxy<UINavigationController, UINavigationControllerDelegate>, DelegateProxyType, UINavigationControllerDelegate {
+    open class RxNavigationControllerDelegateProxy
+        : DelegateProxy<UINavigationController, UINavigationControllerDelegate>
+        , DelegateProxyType 
+        , UINavigationControllerDelegate {
 
         /// Typed parent object.
         public weak private(set) var navigationController: UINavigationController?

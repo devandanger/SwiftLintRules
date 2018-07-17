@@ -9,9 +9,7 @@
 import class Foundation.NotificationCenter
 import struct Foundation.Notification
 
-#if !RX_NO_MODULE
 import RxSwift
-#endif
 
 extension Reactive where Base: NotificationCenter {
     /**
@@ -26,7 +24,7 @@ extension Reactive where Base: NotificationCenter {
             let nsObserver = self.base.addObserver(forName: name, object: object, queue: nil) { notification in
                 observer.on(.next(notification))
             }
-
+            
             return Disposables.create {
                 self.base.removeObserver(nsObserver)
             }

@@ -6,9 +6,7 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-#if !RX_NO_MODULE
 import RxSwift
-#endif
 
 private let errorMessage = "`drive*` family of methods can be only called from `MainThread`.\n" +
 "This is required to ensure that the last replayed `Driver` element is delivered on `MainThread`.\n"
@@ -100,7 +98,7 @@ extension SharedSequenceConvertibleType where SharingStrategy == DriverSharingSt
         MainScheduler.ensureExecutingOnScheduler(errorMessage: errorMessage)
         return with(self.asObservable())(curriedArgument)
     }
-
+    
     /**
     Subscribes an element handler, a completion handler and disposed handler to an observable sequence.
     This method can be only called from `MainThread`.
@@ -119,3 +117,5 @@ extension SharedSequenceConvertibleType where SharingStrategy == DriverSharingSt
         return self.asObservable().subscribe(onNext: onNext, onCompleted: onCompleted, onDisposed: onDisposed)
     }
 }
+
+

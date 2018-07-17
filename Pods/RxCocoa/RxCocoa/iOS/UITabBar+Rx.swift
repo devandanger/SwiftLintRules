@@ -7,11 +7,9 @@
 //
 
 #if os(iOS) || os(tvOS)
-import UIKit
 
-#if !RX_NO_MODULE
+import UIKit
 import RxSwift
-#endif
 
 /**
  iOS only
@@ -21,7 +19,7 @@ extension Reactive where Base: UITabBar {
 
     /// Reactive wrapper for `delegate` message `tabBar(_:willBeginCustomizing:)`.
     public var willBeginCustomizing: ControlEvent<[UITabBarItem]> {
-
+        
         let source = delegate.methodInvoked(#selector(UITabBarDelegate.tabBar(_:willBeginCustomizing:)))
             .map { a in
                 return try castOrThrow([UITabBarItem].self, a[1])
@@ -70,7 +68,7 @@ extension Reactive where Base: UITabBar {
 /**
  iOS and tvOS
  */
-
+    
 extension Reactive where Base: UITabBar {
     /// Reactive wrapper for `delegate`.
     ///

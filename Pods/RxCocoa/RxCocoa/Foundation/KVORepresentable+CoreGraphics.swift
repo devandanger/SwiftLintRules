@@ -8,24 +8,22 @@
 
 #if !os(Linux)
 
-#if !RX_NO_MODULE
-    import RxSwift
-#endif
-    import CoreGraphics
+import RxSwift
+import CoreGraphics
 
-    import class Foundation.NSValue
+import class Foundation.NSValue
 
 #if arch(x86_64) || arch(arm64)
-let CGRectType = "{CGRect={CGPoint=dd}{CGSize=dd}}"
-let CGSizeType = "{CGSize=dd}"
-let CGPointType = "{CGPoint=dd}"
+	let CGRectType = "{CGRect={CGPoint=dd}{CGSize=dd}}"
+    let CGSizeType = "{CGSize=dd}"
+    let CGPointType = "{CGPoint=dd}"
 #elseif arch(i386) || arch(arm)
-let CGRectType = "{CGRect={CGPoint=ff}{CGSize=ff}}"
-let CGSizeType = "{CGSize=ff}"
-let CGPointType = "{CGPoint=ff}"
+    let CGRectType = "{CGRect={CGPoint=ff}{CGSize=ff}}"
+    let CGSizeType = "{CGSize=ff}"
+    let CGPointType = "{CGPoint=ff}"
 #endif
 
-extension CGRect: KVORepresentable {
+extension CGRect : KVORepresentable {
     public typealias KVOType = NSValue
 
     /// Constructs self from `NSValue`.
@@ -39,7 +37,7 @@ extension CGRect: KVORepresentable {
     }
 }
 
-extension CGPoint: KVORepresentable {
+extension CGPoint : KVORepresentable {
     public typealias KVOType = NSValue
 
     /// Constructs self from `NSValue`.
@@ -53,7 +51,7 @@ extension CGPoint: KVORepresentable {
     }
 }
 
-extension CGSize: KVORepresentable {
+extension CGSize : KVORepresentable {
     public typealias KVOType = NSValue
 
     /// Constructs self from `NSValue`.

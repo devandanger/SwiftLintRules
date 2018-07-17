@@ -19,15 +19,15 @@ import RxSwift
  */
 public struct Binder<Value>: ObserverType {
     public typealias E = Value
-
-    private let _binding: (Event<Value>) -> Void
+    
+    private let _binding: (Event<Value>) -> ()
 
     /// Initializes `Binder`
     ///
     /// - parameter target: Target object.
     /// - parameter scheduler: Scheduler used to bind the events.
     /// - parameter binding: Binding logic.
-    public init<Target: AnyObject>(_ target: Target, scheduler: ImmediateSchedulerType = MainScheduler(), binding: @escaping (Target, Value) -> Void) {
+    public init<Target: AnyObject>(_ target: Target, scheduler: ImmediateSchedulerType = MainScheduler(), binding: @escaping (Target, Value) -> ()) {
         weak var weakTarget = target
 
         _binding = { event in

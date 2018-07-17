@@ -6,9 +6,7 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-#if !RX_NO_MODULE
-    import RxSwift
-#endif
+import RxSwift
 
 extension SharedSequenceConvertibleType where SharingStrategy == SignalSharingStrategy {
     /**
@@ -75,3 +73,6 @@ extension SharedSequenceConvertibleType where SharingStrategy == SignalSharingSt
         return self.asObservable().subscribe(onNext: onNext, onCompleted: onCompleted, onDisposed: onDisposed)
     }
 }
+
+
+

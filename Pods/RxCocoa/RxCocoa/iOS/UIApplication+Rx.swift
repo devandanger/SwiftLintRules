@@ -7,14 +7,12 @@
 //
 
 #if os(iOS)
-    import UIKit
 
-#if !RX_NO_MODULE
+    import UIKit
     import RxSwift
-#endif
 
     extension Reactive where Base: UIApplication {
-
+        
         /// Bindable sink for `networkActivityIndicatorVisible`.
         public var isNetworkActivityIndicatorVisible: Binder<Bool> {
             return Binder(self.base) { application, active in
@@ -23,3 +21,4 @@
         }
     }
 #endif
+

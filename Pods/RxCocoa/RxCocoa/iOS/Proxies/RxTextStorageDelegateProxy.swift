@@ -8,16 +8,17 @@
 
 #if os(iOS) || os(tvOS)
 
-    #if !RX_NO_MODULE
-        import RxSwift
-    #endif
+    import RxSwift
     import UIKit
 
     extension NSTextStorage: HasDelegate {
         public typealias Delegate = NSTextStorageDelegate
     }
 
-    open class RxTextStorageDelegateProxy: DelegateProxy<NSTextStorage, NSTextStorageDelegate>, DelegateProxyType, NSTextStorageDelegate {
+    open class RxTextStorageDelegateProxy
+        : DelegateProxy<NSTextStorage, NSTextStorageDelegate>
+        , DelegateProxyType 
+        , NSTextStorageDelegate {
 
         /// Typed parent object.
         public weak private(set) var textStorage: NSTextStorage?

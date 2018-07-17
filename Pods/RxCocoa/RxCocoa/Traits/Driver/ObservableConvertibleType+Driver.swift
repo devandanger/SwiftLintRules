@@ -6,9 +6,7 @@
 //  Copyright © 2015 Krunoslav Zaher. All rights reserved.
 //
 
-#if !RX_NO_MODULE
 import RxSwift
-#endif
 
 extension ObservableConvertibleType {
     /**
@@ -24,7 +22,7 @@ extension ObservableConvertibleType {
             .catchErrorJustReturn(onErrorJustReturn)
         return Driver(source)
     }
-
+    
     /**
     Converts observable sequence to `Driver` trait.
     

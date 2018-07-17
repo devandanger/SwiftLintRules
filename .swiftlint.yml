@@ -1,2 +1,9 @@
 excluded:
   - Pods
+custom_rules:
+  no_add_disposable:
+    match_kinds:
+      - identifier
+    regex: "addDisposableTo"
+    message: "Don't use add disposable use disposed(by: )"
+    severity: error

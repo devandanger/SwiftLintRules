@@ -7,11 +7,9 @@
 //
 
 #if os(iOS) || os(tvOS)
-#if !RX_NO_MODULE
     import RxSwift
-#endif
     import UIKit
-
+    
     extension Reactive where Base: NSTextStorage {
 
         /// Reactive wrapper for `delegate`.
@@ -22,14 +20,14 @@
         }
 
         /// Reactive wrapper for `delegate` message.
-        public var didProcessEditingRangeChangeInLength: Observable<(editedMask: NSTextStorageEditActions, editedRange: NSRange, delta: Int)> {
+        public var didProcessEditingRangeChangeInLength: Observable<(editedMask:NSTextStorageEditActions, editedRange:NSRange, delta:Int)> {
             return delegate
                 .methodInvoked(#selector(NSTextStorageDelegate.textStorage(_:didProcessEditing:range:changeInLength:)))
                 .map { a in
                     let editedMask = NSTextStorageEditActions(rawValue: try castOrThrow(UInt.self, a[1]) )
                     let editedRange = try castOrThrow(NSValue.self, a[2]).rangeValue
                     let delta = try castOrThrow(Int.self, a[3])
-
+                    
                     return (editedMask, editedRange, delta)
                 }
         }

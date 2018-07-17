@@ -6,10 +6,8 @@
 //  Copyright © 2016 Krunoslav Zaher. All rights reserved.
 //
 
-#if !RX_NO_MODULE
-    #if SWIFT_PACKAGE && !DISABLE_SWIZZLING && !os(Linux)
-        import RxCocoaRuntime
-    #endif
+#if SWIFT_PACKAGE && !DISABLE_SWIZZLING && !os(Linux)
+    import RxCocoaRuntime
 #endif
 
 #if !DISABLE_SWIZZLING && !os(Linux)
@@ -22,7 +20,9 @@
     }
 
     /// RxCocoa ObjC runtime modification errors.
-    public enum RxCocoaObjCRuntimeError: Swift.Error, CustomDebugStringConvertible {
+    public enum RxCocoaObjCRuntimeError
+        : Swift.Error
+        , CustomDebugStringConvertible {
         /// Unknown error has occurred.
         case unknown(target: AnyObject)
 
@@ -118,16 +118,16 @@
             }
         }
     }
-
+    
     // MARK: Conversions `NSError` > `RxCocoaObjCRuntimeError`
 
     extension Error {
         func rxCocoaErrorForTarget(_ target: AnyObject) -> RxCocoaObjCRuntimeError {
             let error = self as NSError
-
+            
             if error.domain == RXObjCRuntimeErrorDomain {
                 let errorCode = RXObjCRuntimeError(rawValue: error.code) ?? .unknown
-
+                
                 switch errorCode {
                 case .unknown:
                     return .unknown(target: target)
@@ -150,9 +150,10 @@
                     return .observingMessagesWithUnsupportedReturnType(target: target)
                 }
             }
-
+            
             return RxCocoaObjCRuntimeError.unknown(target: target)
         }
     }
 
 #endif
+

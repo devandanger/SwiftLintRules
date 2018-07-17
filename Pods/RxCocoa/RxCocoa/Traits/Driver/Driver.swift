@@ -6,9 +6,7 @@
 //  Copyright © 2016 Krunoslav Zaher. All rights reserved.
 //
 
-#if !RX_NO_MODULE
-    import RxSwift
-#endif
+import RxSwift
 
 /**
  Trait that represents observable sequence with following properties:
@@ -52,3 +50,4 @@ extension SharedSequenceConvertibleType where SharingStrategy == DriverSharingSt
         return self.asSharedSequence()
     }
 }
+
