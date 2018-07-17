@@ -221,6 +221,8 @@ private class MergeLimitedSink<SourceElement, SourceSequence: ObservableConverti
 
     init(maxConcurrent: Int, observer: Observer, cancel: Cancelable) {
         _maxConcurrent = maxConcurrent
+
+        _ = _group.insert(_sourceSubscription)
         super.init(observer: observer, cancel: cancel)
     }
 
