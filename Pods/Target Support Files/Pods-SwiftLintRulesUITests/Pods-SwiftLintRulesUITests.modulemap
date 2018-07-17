@@ -1,0 +1,6 @@
+framework module Pods_SwiftLintRulesUITests {
+  umbrella header "Pods-SwiftLintRulesUITests-umbrella.h"
+
+  export *
+  module * { export * }
+}
